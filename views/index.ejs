@@ -1,9 +1,50 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" type="text/css" href="/styles.css" />
 </head>
+
 <body>
     <h1>Hello world</h1>
+
+    <div id="data-container"></div>
+
+    <script type="text/javascript">
+
+
+        // Get a reference to the DOM element
+        const dataContainer = document.getElementById('data-container');
+
+        async function fetchPosts() {
+            const url = '/api/posts';
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log(data);
+                // Clear any previous content
+                dataContainer.innerHTML = '';
+
+                // Create and append new HTML elements for each post
+                data.forEach(post => {
+                    const postElement = document.createElement('p');
+                    postElement.textContent = post.info;
+                    dataContainer.appendChild(postElement);
+                });
+
+            } catch (error) {
+                dataContainer.innerHTML = `<p>Error loading data: ${error.message}</p>`;
+                console.error('There was a problem with the fetch operation:', error);
+            }
+        }
+
+        fetchPosts();
+    </script>
 </body>
+
 </html>
